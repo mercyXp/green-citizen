@@ -8,7 +8,7 @@ export interface CardProps {
 }
 
 export interface CardHeaderProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   title?: string;
   subtitle?: string;
@@ -50,7 +50,7 @@ export const Card: React.FC<CardProps> & {
   );
 };
 
-const CardHeader: React.FC<CardHeaderProps> = ({ 
+export const CardHeader: React.FC<CardHeaderProps> = ({ 
   children, 
   className = '',
   title,
@@ -63,19 +63,19 @@ const CardHeader: React.FC<CardHeaderProps> = ({
   </div>
 );
 
-const CardBody: React.FC<CardBodyProps> = ({ children, className = '' }) => (
+export const CardBody: React.FC<CardBodyProps> = ({ children, className = '' }) => (
   <div className={`space-y-4 ${className}`}>
     {children}
   </div>
 );
 
-const CardContent: React.FC<CardContentProps> = ({ children, className = '' }) => (
+export const CardContent: React.FC<CardContentProps> = ({ children, className = '' }) => (
   <div className={`text-secondary ${className}`}>
     {children}
   </div>
 );
 
-const CardFooter: React.FC<CardFooterProps> = ({ children, className = '' }) => (
+export const CardFooter: React.FC<CardFooterProps> = ({ children, className = '' }) => (
   <div className={`mt-6 pt-4 border-t border-border-primary flex items-center gap-3 ${className}`}>
     {children}
   </div>
