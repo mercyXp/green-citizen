@@ -1,123 +1,62 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+'use client';
 
-export type Theme = 'light' | 'dark' | 'system';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  theme: 'light' | 'dark';
   toggleTheme: () => void;
-  resolvedTheme: 'light' | 'dark'; // The actual theme being displayed
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export interface ThemeProviderProps {
-  children: ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
-}
-
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({
-  children,
-  defaultTheme = 'system',
-  storageKey = 'theme'
-}) => {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem(storageKey) as Theme;
-      if (savedTheme) {
-        return savedTheme;
-      }
-    }
-    return defaultTheme;
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const savedTheme = typeof window !== 'undefined' 
+      ? localStorage.getItem('green-citizen-theme') as 'light' | 'dark' | null
+      : null;
+    return savedTheme || 'light';
   });
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
-  // Apply theme to document and update resolved theme
   useEffect(() => {
-    const root = document.documentElement;
+    // Check localStorage and update DOM
+    const savedTheme = localStorage.getItem('green-citizen-theme') as 'light' | 'dark' | null;
+    const currentTheme = savedTheme || 'light';
     
-    const applyTheme = () => {
-      if (theme === 'system') {
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        if (systemPrefersDark) {
-          root.classList.add('dark');
-          setResolvedTheme('dark');
-        } else {
-          root.classList.remove('dark');
-          setResolvedTheme('light');
-        }
-      } else if (theme === 'dark') {
-        root.classList.add('dark');
-        setResolvedTheme('dark');
-      } else {
-        root.classList.remove('dark');
-        setResolvedTheme('light');
-      }
-    };
-
-    applyTheme();
-
-    // Listen for system theme changes when in system mode
-    if (theme === 'system') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleChange = () => applyTheme();
-      
-      // Modern browsers
-      if (mediaQuery.addEventListener) {
-        mediaQuery.addEventListener('change', handleChange);
-        return () => mediaQuery.removeEventListener('change', handleChange);
-      } else {
-        // Fallback for older browsers
-        mediaQuery.addListener(handleChange);
-        return () => mediaQuery.removeListener(handleChange);
-      }
-    }
-  }, [theme]);
-
-  // Set theme and persist to localStorage
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-    
-    if (newTheme === 'system') {
-      localStorage.removeItem(storageKey);
+    if (currentTheme === 'dark') {
+      document.documentElement.classList.add('dark');
     } else {
-      localStorage.setItem(storageKey, newTheme);
+      document.documentElement.classList.remove('dark');
     }
-  };
+    
+    if (!savedTheme) {
+      localStorage.setItem('green-citizen-theme', 'light');
+    }
+  }, []);
 
-  // Toggle through themes: light → dark → system
   const toggleTheme = () => {
-    const themeOrder: Theme[] = ['light', 'dark', 'system'];
-    const currentIndex = themeOrder.indexOf(theme);
-    const nextTheme = themeOrder[(currentIndex + 1) % themeOrder.length];
-    setTheme(nextTheme);
-  };
-
-  const value: ThemeContextType = {
-    theme,
-    setTheme,
-    toggleTheme,
-    resolvedTheme
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    
+    localStorage.setItem('green-citizen-theme', newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={value}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
-};
+}
 
-// Custom hook to use theme context
-export const useTheme = (): ThemeContextType => {
+export function useTheme() {
   const context = useContext(ThemeContext);
-  
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+  if (!context) {
+    throw new Error('useTheme must be used within ThemeProvider');
   }
-  
   return context;
-};
-
-export default ThemeProvider;
+}

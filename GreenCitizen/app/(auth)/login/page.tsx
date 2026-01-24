@@ -1,6 +1,5 @@
 'use client';
-
-import { useState } from 'react';
+import React, { useState} from 'react';
 import { Leaf, Eye, EyeOff, User, Lock, ArrowRight } from 'lucide-react';
 
 import { Card } from '@/app/components/ui/card';
@@ -44,13 +43,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 transition-colors duration-300">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Leaf className="w-10 h-10 text-primary" />
-            <span className="text-3xl font-bold">GreenCitizen</span>
+            <span className="text-3xl font-bold text-primary">GreenCitizen</span>
           </div>
           <p className="text-secondary">Welcome back, Green Citizen</p>
         </div>
@@ -62,14 +61,14 @@ export default function LoginPage() {
 
         {/* Card */}
         <Card>
-          <h2 className="text-2xl font-bold mb-6">
+          <h2 className="text-2xl font-bold mb-6 text-primary">
             Login to your account
           </h2>
           <br/>
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Identifier */}
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-primary">
                 Email or Username
               </label>
               <div className="relative">
@@ -79,7 +78,7 @@ export default function LoginPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, identifier: e.target.value })
                   }
-                  placeholder="       yourname@example.com"
+                  placeholder="yourname@example.com"
                   className="pl-11" 
                   required
                 />
@@ -88,7 +87,7 @@ export default function LoginPage() {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-primary">
                 Password
               </label>
               <div className="relative">
@@ -106,7 +105,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-tertiary hover:text-primary"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-tertiary hover:text-primary transition-colors"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -119,11 +118,14 @@ export default function LoginPage() {
 
             {/* Actions */}
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
+              <label className="flex items-center gap-2 text-secondary cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  className="cursor-pointer"
+                />
                 <span>Remember me</span>
               </label>
-              <a href="/forgot-password" className="text-primary">
+              <a href="/forgot-password" className="text-primary hover:underline transition-colors">
                 Forgot password?
               </a>
             </div>
@@ -147,21 +149,22 @@ export default function LoginPage() {
               )}
             </Button>
           </form>
+          
           {/* Divider */}
-            <div className="flex items-center my-6 text-sm text-tertiary">
+          <div className="flex items-center my-6 text-sm text-tertiary">
             <div className="flex-1 h-px bg-border" />
             <span className="px-4">or continue with</span>
             <div className="flex-1 h-px bg-border" />
-            </div>
+          </div>
 
-            {/* Social Login */}
-            <div className="grid grid-cols-2 gap-4">
+          {/* Social Login */}
+          <div className="grid grid-cols-2 gap-4">
             <Button
-                type="button"
-                variant="outline"
-                className="flex items-center gap-2"
+              type="button"
+              variant="outline"
+              className="flex items-center gap-2 hover:bg-muted transition-colors"
             >
-                 <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -171,22 +174,21 @@ export default function LoginPage() {
             </Button>
 
             <Button
-                type="button"
-                variant="outline"
-                className="flex items-center gap-2"
+              type="button"
+              variant="outline"
+              className="flex items-center gap-2 hover:bg-muted transition-colors"
             >
-                <svg className="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="#1877F2" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
               <span className="text-sm font-medium">Facebook</span>
             </Button>
-            </div>
-
+          </div>
 
           {/* Footer */}
           <p className="text-center text-sm mt-6 text-secondary">
-            Don’t have an account?{' '}
-            <a href="/register" className="text-primary font-semibold">
+            Don&apos;t have an account?{' '}
+            <a href="/register" className="text-primary font-semibold hover:underline transition-colors">
               Sign up
             </a>
           </p>
@@ -195,8 +197,8 @@ export default function LoginPage() {
         {/* Legal */}
         <p className="text-center mt-6 text-xs text-tertiary">
           By logging in, you agree to our{' '}
-          <a href="/terms" className="text-primary">Terms</a> and{' '}
-          <a href="/privacy" className="text-primary">Privacy Policy</a>
+          <a href="/terms" className="text-primary hover:underline transition-colors">Terms</a> and{' '}
+          <a href="/privacy" className="text-primary hover:underline transition-colors">Privacy Policy</a>
         </p>
       </div>
     </div>

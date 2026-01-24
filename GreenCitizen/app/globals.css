@@ -3,12 +3,14 @@
 /* ==================== TAILWIND V4 THEME CONFIGURATION ==================== */
 @theme {
   /* Green Citizen Brand Colors */
-  --color-primary: #16a34a;
-  --color-primary-dark: #15803d;
-  --color-primary-light: #86efac;
-  
-  --color-secondary: #3b82f6;
-  --color-accent: #ec4899;
+  --color-primary: #16a34a; /* Green */
+  --color-primary-dark: #15803d; /* Darker Green */
+  --color-primary-light: #86efac; /* Lighter Green */
+
+  --color-secondary: #3b82f6; /* Blue */
+  --color-secondary-dark: #2563eb; /* Darker Blue */
+  --color-secondary-light: #93c5fd; /* Lighter Blue */
+  --color-accent: #ec4899; /* Pink Accent */
   
   /* Custom Font Family */
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -22,51 +24,33 @@
 /* ==================== COLOR VARIABLES FOR DARK MODE ==================== */
 :root {
   /* Light Mode Colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --bg-tertiary: #f3f4f6;
+  --bg-primary: #ffffff; /* White */
+  --bg-secondary: #f9fafb; /* Light Gray */
+  --bg-tertiary: #f3f4f6; /* Lighter Gray */
   
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --text-tertiary: #6b7280;
+  --text-primary: #111827; /* Dark Gray */
+  --text-secondary: #4b5563; /* Medium Gray */
+  --text-tertiary: #6b7280; /* Light Gray */
   
-  --border-primary: #e5e7eb;
-  --border-secondary: #d1d5db;
+  --border-primary: #e5e7eb;  /* Light Border */
+  --border-secondary: #d1d5db; /* Lighter Border */
   
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Dark Mode Colors */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-primary: #111827;
-    --bg-secondary: #1f2937;
-    --bg-tertiary: #374151;
-    
-    --text-primary: #f9fafb;
-    --text-secondary: #d1d5db;
-    --text-tertiary: #9ca3af;
-    
-    --border-primary: #374151;
-    --border-secondary: #4b5563;
-    
-    --shadow-color: rgba(0, 0, 0, 0.3);
-  }
-}
-
 /* Manual Dark Mode Class (higher priority than system preference) */
 .dark {
-  --bg-primary: #111827;
-  --bg-secondary: #1f2937;
-  --bg-tertiary: #374151;
-  
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
-  --text-tertiary: #9ca3af;
-  
-  --border-primary: #374151;
-  --border-secondary: #4b5563;
-  
+  --bg-primary: #111827; /* Dark Gray */
+  --bg-secondary: #1f2937; /* Darker Gray */
+  --bg-tertiary: #374151; /* Even Darker Gray */
+
+  --text-primary: #f9fafb; /* Light Gray */
+  --text-secondary: #d1d5db; /* Medium Light Gray */
+  --text-tertiary: #9ca3af; /* Lighter Gray */
+
+  --border-primary: #374151; /* Dark Border */
+  --border-secondary: #4b5563; /* Darker Border */
+
   --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
