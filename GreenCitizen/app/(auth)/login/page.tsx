@@ -1,5 +1,6 @@
 'use client';
 import React, { useState} from 'react';
+import { useRouter } from 'next/navigation';
 import { Leaf, Eye, EyeOff, User, Lock, ArrowRight } from 'lucide-react';
 
 import { Card } from '@/app/components/ui/card';
@@ -12,6 +13,7 @@ import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   const supabase = createClient();
+  const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,8 +40,8 @@ export default function LoginPage() {
       return;
     }
 
-    // redirect handled by middleware
-    setLoading(false);
+    // Redirect to dashboard on successful login
+    router.push('/dashboard');
   }
 
   return (
