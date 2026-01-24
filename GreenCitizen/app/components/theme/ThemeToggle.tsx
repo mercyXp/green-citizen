@@ -1,11 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/app/components/theme/ThemeProvider';
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <button
@@ -22,6 +31,7 @@ export function ThemeToggle() {
               : 'opacity-0 -rotate-90 scale-0'
           }`}
           size={20}
+          aria-hidden="true"
         />
         <Moon 
           className={`absolute text-white transition-all duration-300 ${
@@ -30,6 +40,7 @@ export function ThemeToggle() {
               : 'opacity-0 rotate-90 scale-0'
           }`}
           size={20}
+          aria-hidden="true"
         />
       </div>
     </button>

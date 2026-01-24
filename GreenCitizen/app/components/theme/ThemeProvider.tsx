@@ -10,17 +10,15 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const savedTheme = typeof window !== 'undefined' 
-      ? localStorage.getItem('green-citizen-theme') as 'light' | 'dark' | null
-      : null;
-    return savedTheme || 'light';
-  });
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Check localStorage and update DOM
+    // Only run on client after hydration
     const savedTheme = localStorage.getItem('green-citizen-theme') as 'light' | 'dark' | null;
     const currentTheme = savedTheme || 'light';
+    
+    setTheme(currentTheme);
     
     if (currentTheme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -31,6 +29,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (!savedTheme) {
       localStorage.setItem('green-citizen-theme', 'light');
     }
+    
+    setIsMounted(true);
   }, []);
 
   const toggleTheme = () => {
@@ -45,6 +45,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     
     localStorage.setItem('green-citizen-theme', newTheme);
   };
+
+  // Don't render children until hydration is complete
+  if (!isMounted) {
+    return <>{children}</>;
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

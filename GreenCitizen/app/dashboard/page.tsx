@@ -32,41 +32,56 @@ type Action = {
 // =====================
 // DASHBOARD PAGE
 // =====================
-function DashboardPage() {
+
+export default function DashboardPage() {
   const supabase = createClient();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [actions, setActions] = useState<Action[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isLogActionOpen, setIsLogActionOpen] = useState(false);
 
   const loadDashboard = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
 
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) {
+      const { data: userData, error: authError } = await supabase.auth.getUser();
+      if (authError || !userData.user) {
+        setError('User not authenticated');
         setLoading(false);
         return;
       }
 
-      const { data: profileData } = await supabase
+      const { data: profileData, error: profileError } = await supabase
         .from('users')
         .select('*')
         .eq('id', userData.user.id)
         .single();
 
-      const { data: actionsData } = await supabase
+      if (profileError) {
+        setError(`Profile error: ${profileError.message}`);
+        setLoading(false);
+        return;
+      }
+
+      const { data: actionsData, error: actionsError } = await supabase
         .from('actions')
         .select('*')
         .eq('user_id', userData.user.id)
         .order('created_at', { ascending: false })
         .limit(10);
 
+      if (actionsError) {
+        console.warn('Actions error (non-critical):', actionsError);
+      }
+
       setProfile(profileData as UserProfile);
       setActions((actionsData as Action[]) || []);
-    } catch (error) {
-      console.error('Error loading dashboard:', error);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Dashboard error:', err);
     } finally {
       setLoading(false);
     }
@@ -78,13 +93,42 @@ function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin" />
+      <div className="flex h-screen items-center justify-center bg-bg-primary">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
-  if (!profile) return null;
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-bg-primary p-4">
+        <Card className="w-full max-w-md border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20">
+          <CardContent className="p-6">
+            <p className="text-sm font-semibold text-red-800 dark:text-red-200">Error Loading Dashboard</p>
+            <p className="text-sm text-red-700 dark:text-red-300 mt-2">{error}</p>
+            <Button onClick={loadDashboard} className="mt-4 w-full">
+              Try Again
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-bg-primary p-4">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-6">
+            <p className="text-sm text-secondary">No profile found. Please complete onboarding.</p>
+            <Button onClick={() => window.location.href = '/onboarding'} className="mt-4 w-full">
+              Go to Onboarding
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const verifiedPoints = actions
     .filter((a) => a.verification_level === 'verified' || a.verification_level === 'champion')
@@ -283,4 +327,3 @@ function DashboardPage() {
     </div>
   );
 }
-export default DashboardPage;

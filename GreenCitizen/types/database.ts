@@ -102,8 +102,26 @@ export interface Database {
     }
 
     Views: {
-      [_ in never]: never
-    }
+      analytics_actions_by_type: {
+        Row: {
+          action_type: string
+          total_actions: number
+        }
+      }
+      analytics_actions_by_district: {
+        Row: {
+          district: string
+          total_actions: number
+        }
+      }
+      analytics_user_engagement: {
+        Row: {
+          user_id: string
+          actions_logged: number
+        }
+      }
+  }
+
 
     Functions: {
       [_ in never]: never
